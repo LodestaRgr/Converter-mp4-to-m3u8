@@ -11,12 +11,12 @@ services:
 
   app:
 # -- ручной вариант
-#    build:
-#     context: ./
-#     dockerfile: Dockerfile
+    build:
+     context: ./
+     dockerfile: Dockerfile
 
 # -- оригинальный образ
-    image: php:fpm-alpine3.20
+#    image: php:fpm-alpine3.20
     container_name: stream-app
     restart: always
     working_dir: /var/www/
