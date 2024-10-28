@@ -22,6 +22,7 @@ services:
     working_dir: /var/www/
     volumes:
       - ../src:/var/www  
+    command: sh -c "mkdir -p /var/www/public/uploads /var/www/public/media && chmod -R 777 /var/www/public/uploads /var/www/public/media && php-fpm"
 
   nginx:
     image: nginx:1.19-alpine
