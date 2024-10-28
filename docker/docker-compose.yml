@@ -10,7 +10,6 @@ services:
       - ./auth:/var/lib/registry
 
   app:
-# -- ручной вариант
     build:
      context: ./
      dockerfile: Dockerfile
