@@ -10,19 +10,22 @@ services:
       - ./auth:/var/lib/registry
 
   app:
-# -- manual container
-    build:
-     context: ./
-     dockerfile: Dockerfile
-# -- ogiginal image
-#    image: php:fpm-alpine3.20
-#    command: sh -c "apk add --no-cache unzip ffmpeg && nginx -g 'daemon off;'"
+# -- ручной вариант
+#    build:
+#     context: ./
+#     dockerfile: Dockerfile
+
+# -- оригинальный образ
+    image: php:fpm-alpine3.20
     container_name: stream-app
     restart: always
     working_dir: /var/www/
     volumes:
-      - ../src:/var/www  
-    command: sh -c "mkdir -p /var/www/public/uploads /var/www/public/media && chmod -R 777 /var/www/public/uploads /var/www/public/media && php-fpm"
+      - ../src:/var/www
+    command: >
+      sh -c "mkdir -p /var/www/public/uploads /var/www/public/media &&
+             chmod -R 777 /var/www/public/uploads /var/www/public/media &&
+             php-fpm"
 
   nginx:
     image: nginx:1.19-alpine
