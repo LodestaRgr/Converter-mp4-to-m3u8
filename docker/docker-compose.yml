@@ -14,9 +14,7 @@ services:
     build:
      context: ./
      dockerfile: Dockerfile
-
-# -- оригинальный образ
-#    image: php:fpm-alpine3.20
+    image: lodestargr/stream-app:latest
     container_name: stream-app
     restart: always
     working_dir: /var/www/
