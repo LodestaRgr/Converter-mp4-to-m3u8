@@ -1,6 +1,4 @@
 <?php
-session_start();
-
 function generateUniqueFolderName($prefix = 'media_') {
     return uniqid($prefix, true);
 }
@@ -40,6 +38,13 @@ if($videoFileType != "mp4") {
 if ($uploadOk == 0) {
     echo "Sorry, your file was not uploaded.<br>";
 } else {
+
+    if (!is_dir($target_dir)) {
+        if (!mkdir($target_dir, 0777, true)) {
+            echo "Failed to create directories...<br>";
+        }
+    }
+
     if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
         echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.<br>";
 
@@ -54,10 +59,10 @@ if ($uploadOk == 0) {
 
         $commands = [
             "ffmpeg -i " . escapeshellarg($target_file) . " -ss 20.00 -vframes 1 " . escapeshellarg("$output_dir/cover_h1.jpg"),
-            "ffmpeg -i " . escapeshellarg($target_file) . " -ss 20.00 -vframes 1 -s 760x428 " . escapeshellarg("$output_dir/cover_l1.jpg"),
-            "ffmpeg -ss 00:00:10 -t 3 -i " . escapeshellarg($target_file) . " -s 640x360 -r 2 " . escapeshellarg("$output_dir/preview.gif"),
-            "ffmpeg -i " . escapeshellarg($target_file) . " -profile:v baseline -level 3.0 -s 800x480 -start_number 0 -hls_time 2 -force_key_frames 'expr:gte(t,n_forced*2)' -hls_list_size 0 -threads 5 -preset ultrafast -f hls " . escapeshellarg("$output_dir/480_out.m3u8"),
-            "ffmpeg -i " . escapeshellarg($target_file) . " -profile:v baseline -level 3.0 -s 1280x720 -start_number 0 -hls_time 2 -force_key_frames 'expr:gte(t,n_forced*2)' -hls_list_size 0 -threads 5 -preset ultrafast -f hls " . escapeshellarg("$output_dir/720_out.m3u8"),
+            "ffmpeg -i " . escapeshellarg($target_file) . " -ss 20.00 -vframes 1 -s 760x428 -aspect 16:9 " . escapeshellarg("$output_dir/cover_l1.jpg"),
+            "ffmpeg -ss 00:00:10 -t 15 -i " . escapeshellarg($target_file) . " -vf 'scale=100:-1' -r 5 " . escapeshellarg("$output_dir/preview.gif"),
+            "ffmpeg -i " . escapeshellarg($target_file) . " -profile:v baseline -level 3.0 -vf 'scale=800:-1' -start_number 0 -hls_time 2 -force_key_frames 'expr:gte(t,n_forced*2)' -hls_list_size 0 -threads 5 -preset ultrafast -f hls " . escapeshellarg("$output_dir/480_out.m3u8"),
+            "ffmpeg -i " . escapeshellarg($target_file) . " -profile:v baseline -level 3.0 -vf 'scale=1280:-1' -start_number 0 -hls_time 2 -force_key_frames 'expr:gte(t,n_forced*2)' -hls_list_size 0 -threads 5 -preset ultrafast -f hls " . escapeshellarg("$output_dir/720_out.m3u8"),
         ];
 
         $all_commands_executed = true;
